@@ -1,0 +1,23 @@
+{
+  "name": "docs",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "exports": {
+    "./openapi.yaml": "./build/openapi.yaml"
+  },
+  "scripts": {
+    "dev:frontend": "vite",
+    "dev:openapi": "pnpm build:openapi --watch",
+    "build:frontend": "tsc && vite build",
+    "build:openapi": "tsp compile ./src --emit @typespec/openapi3"
+  },
+  "devDependencies": {
+    "@typespec/compiler": "^1.0.0",
+    "@typespec/http-client-python": "^0.12.0",
+    "@typespec/openapi3": "^1.0.0",
+    "@typespec/rest": "^0.70.0",
+    "typescript": "~5.8.3",
+    "vite": "^6.3.5"
+  }
+}
