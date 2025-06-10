@@ -2,7 +2,8 @@ package database
 
 import (
 	"database/sql"
-    "educesol.com/payment-service/config"
+
+	"educesol.com/payment-service/config"
 	_ "github.com/go-sql-driver/mysql"
 )
 
@@ -10,7 +11,7 @@ var Db *sql.DB
 var err error
 
 func Initialize() *sql.DB {
-	conf := config.NewSecurityConfig() 
+	conf := config.NewSecurityConfig()
 	db_url := conf.DatabaseUrl
 	Db, err = sql.Open("mysql", db_url)
 	if err != nil {
@@ -35,6 +36,7 @@ func createTables() {
 	currencyCode VARCHAR(255) NOT NULL,
 	customerName TEXT NOT NULL,
 	customerEmail TEXT NOT NULL,
+	accountBalance DECIMAL(10,4) NOT NULL DEFAULT 0.00,
 	createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
 	updatedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 	)

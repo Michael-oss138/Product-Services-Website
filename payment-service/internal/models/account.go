@@ -10,10 +10,11 @@ type Account struct {
 	AccountNumber    string    `json:"accountNumber"`
 	AccountName      string    `json:"accountName"`
 	BankName         string    `json:"bankName"`
-	BankCode         string     `json:"bankCode"`
+	BankCode         string    `json:"bankCode"`
 	CurrencyCode     string    `json:"currencyCode"`
 	CustomerName     string    `json:"customerName"`
 	CustomerEmail    string    `json:"customerEmail"`
+	AccountBalance   float64   `json:accountBalance`
 	CreatedAt        time.Time `json:"createdAt"`
 	UpdatedAt        time.Time `json:"updatedAt"`
 }
@@ -29,7 +30,7 @@ type AccountDetails struct {
 	AccountNumber string `json:"accountNumber"`
 	AccountName   string `json:"accountName"`
 	BankName      string `json:"bankName"`
-	BankCode      string  `json:"bankCode"`
+	BankCode      string `json:"bankCode"`
 }
 type CreateAccountResponse struct {
 	ContractCode     string           `json:"contractCode"`
@@ -41,11 +42,11 @@ type CreateAccountResponse struct {
 	CustomerEmail    string           `json:"customerEmail"`
 	Status           string           `json:"status"`
 }
-type RequestResponse struct{
-	RequestSuccessful bool `json:"requestSuccessful"`
-	ResponseCode string `json:"responseCode"`
-	ResponseMessage string `json:"responseMessage"`
-	ResponseBody CreateAccountResponse `json:"responseBody"`
+type RequestResponse struct {
+	RequestSuccessful bool                  `json:"requestSuccessful"`
+	ResponseCode      string                `json:"responseCode"`
+	ResponseMessage   string                `json:"responseMessage"`
+	ResponseBody      CreateAccountResponse `json:"responseBody"`
 }
 type AccountRepository interface {
 	CreateAccount(details *Account) error

@@ -42,7 +42,7 @@ func (ar *AccountRepository) GetAccounts() (*[]models.Account, error) {
 	}
 	for rows.Next() {
 		var account models.Account
-		err := rows.Scan(&account.Id, &account.UserId, &account.ContractCode, &account.AccountReference, &account.AccountNumber, &account.AccountName, &account.BankName, &account.BankCode, &account.CurrencyCode, &account.CustomerName, &account.CustomerEmail, &account.CreatedAt, &account.UpdatedAt)
+		err := rows.Scan(&account.Id, &account.UserId, &account.ContractCode, &account.AccountReference, &account.AccountNumber, &account.AccountName, &account.BankName, &account.BankCode, &account.CurrencyCode, &account.CustomerName, &account.CustomerEmail, &account.AccountBalance, &account.CreatedAt, &account.UpdatedAt)
 		if err != nil {
 			return nil, err
 		}
@@ -58,7 +58,7 @@ func (ar *AccountRepository) GetUserAccount(userId string) (*models.Account, err
 	}
 	row := stmt.QueryRow(userId)
 	var account models.Account
-	err = row.Scan(&account.Id, &account.UserId, &account.ContractCode, &account.AccountReference, &account.AccountNumber, &account.AccountName, &account.BankName, &account.BankCode, &account.CurrencyCode, &account.CustomerName, &account.CustomerEmail, &account.CreatedAt, &account.UpdatedAt)
+	err = row.Scan(&account.Id, &account.UserId, &account.ContractCode, &account.AccountReference, &account.AccountNumber, &account.AccountName, &account.BankName, &account.BankCode, &account.CurrencyCode, &account.CustomerName, &account.CustomerEmail, &account.AccountBalance, &account.CreatedAt, &account.UpdatedAt)
 	if err != nil {
 		return nil, errors.New("no account record exists with provided userId")
 	}
