@@ -14,7 +14,7 @@ type Account struct {
 	CurrencyCode     string    `json:"currencyCode"`
 	CustomerName     string    `json:"customerName"`
 	CustomerEmail    string    `json:"customerEmail"`
-	AccountBalance   float64   `json:accountBalance`
+	AccountBalance   float64   `json:"accountBalance"`
 	CreatedAt        time.Time `json:"createdAt"`
 	UpdatedAt        time.Time `json:"updatedAt"`
 }
