@@ -3,7 +3,7 @@ import { NotificationType } from "../../models/Notification";
 
 class RedisService {
   async saveNotification(notification: NotificationType) {
-    let key = `Notification:${notification.user.id}`;
+    let key = `Notification:${notification.userid}`;
     let value = JSON.stringify(notification);
     await client.lPush(key, value);
   }
