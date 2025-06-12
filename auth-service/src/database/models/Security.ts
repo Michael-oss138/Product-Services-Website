@@ -2,7 +2,7 @@ import mongoose, { Model, Schema, Document } from "mongoose";
 import Encryption from "../../utils/Encryption";
 const encrypt = new Encryption();
 
-interface SecurityDocument extends Document {
+export interface SecurityDocument extends Document {
   userId: string;
   role: string;
   password: string;
@@ -16,6 +16,7 @@ interface SecurityDocument extends Document {
 const SecuritySchema: Schema<SecurityDocument> = new Schema<SecurityDocument>({
   userId: {
     type: String,
+    unique: true,
     required: [true, "User Id cannot be null"],
   },
   role: {
