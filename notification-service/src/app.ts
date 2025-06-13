@@ -1,13 +1,9 @@
-import express from "express";
-import bodyParser from "body-parser";
+import { Hono } from "hono";
 import notificationRoutes from "./routes/notification";
-const app = express();
+const app = new Hono();
+import { logger } from "hono/logger";
 
-app.use(express.static("public"));
-app.use(express.json());
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: true }));
-
-app.use("/notifications", notificationRoutes);
+app.use(logger());
+app.route("/notifications", notificationRoutes);
 
 export default app;
