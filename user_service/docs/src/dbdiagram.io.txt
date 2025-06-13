@@ -1,0 +1,457 @@
+Table addresses {
+    id uuid [pk]
+    school_information_id uuid [ref: > school_information.id, null]
+    street_address varchar
+    city varchar
+    state varchar
+    country varchar
+    postal_code varchar [null]
+    created_at timestamp
+    updated_at timestamp
+}
+
+Table admin_activity_logs {
+    id uuid [pk]
+    admin_id uuid [ref: > admins.id]
+    activity_type varchar [note: 'login, view, create, update, delete']
+    entity_type varchar [note: 'student, teacher, class, etc.']
+    entity_id uuid
+    description text
+    ip_address varchar
+    created_at timestamp
+}
+
+Table admins {
+    id uuid [pk]
+    user_id uuid [ref: - users.id]
+    school_id uuid [ref: > schools.id]
+    role enum [note: 'super_admin, academic_admin, financial_admin']
+    permissions json
+    last_login timestamp
+    created_at timestamp
+    updated_at timestamp
+}
+
+Table assignments {
+    id uuid [pk]
+    title varchar
+    description text
+    subject_id uuid [ref: > subjects.id]
+    term_id uuid [ref: > terms.id]
+    due_date timestamp
+    max_score decimal
+    submission_status varchar
+    attachment_url varchar [null]
+    created_at timestamp
+    updated_at timestamp
+}
+
+Table attendance {
+    id uuid [pk]
+    student_id uuid [ref: > students.id]
+    teacher_id uuid [ref: > teachers.id]
+    result_id uuid [ref: > results.id]
+    date date
+    status enum [note: 'Present, Absent']
+    remarks text [null]
+    created_at timestamp
+    updated_at timestamp
+}
+
+Table class_assignments {
+    id uuid [pk]
+    class_id uuid [ref: > classes.id]
+    assignment_id uuid [ref: > assignments.id]
+    assigned_date timestamp
+    status enum [note: 'active, completed, expired']
+    created_at timestamp
+    updated_at timestamp
+    indexes {
+        (class_id, assignment_id) [unique]
+    }
+}
+
+Table class_subjects {
+    id uuid [pk]
+    subject_id uuid [ref: > subjects.id]
+    class_id uuid [ref: > classes.id]
+    created_at timestamp
+    updated_at timestamp
+    indexes {
+        (class_id, subject_id) [unique]
+    }
+}
+
+Table classes {
+    id uuid [pk]
+    school_id uuid [ref: > schools.id]
+    class_name varchar [note: 'JSS1a, JSS1b, SS1a, SS2b, etc']
+    class_level enum [note: 'JSS1, JSS2, JSS3, SS1, SS2, SS3']
+    class_arm varchar [note: 'a, b, c, d']
+    class_capacity integer
+    class_type enum [note: 'Science, Commercial, Arts, null for junior classes']
+    is_senior boolean [default: false]
+    created_at timestamp
+    updated_at timestamp
+    indexes {
+        (class_level, class_arm) [unique]
+    }
+}
+
+Table contact_information {
+    id uuid [pk]
+    student_id uuid [ref: - students.id]
+    address_id uuid [ref: > addresses.id]
+    emergency_contact_name varchar
+    emergency_contact_phone varchar
+    emergency_contact_address text [null]
+    emergency_contact_relationship varchar
+    created_at timestamp
+    updated_at timestamp
+}
+
+Table daily_activities {
+    id uuid [pk]
+    teacher_id uuid [ref: > teachers.id]
+    subject_id uuid [ref: > subjects.id]
+    term_id uuid [ref: > terms.id]
+    activity_date daterange
+    activity_time timerange
+    activity_name varchar
+    activity_description text
+    created_at timestamp
+    updated_at timestamp
+}
+
+Table guardian_students {
+    id uuid [pk]
+    student_id uuid [ref: > students.id]
+    guardian_id uuid [ref: > guardians.id]
+    relationship_type varchar
+    status enum [note: 'active, inactive']
+    created_at timestamp
+    updated_at timestamp
+    indexes {
+        (guardian_id, student_id) [unique]
+    }
+}
+
+Table guardians {
+    id uuid [pk]
+    user_id uuid [ref: - users.id]
+    created_at timestamp
+    updated_at timestamp
+}
+
+Table lesson_notes {
+    id uuid [pk]
+    subject_id uuid [ref: > subjects.id]
+    teacher_id uuid [ref: > teachers.id]
+    class_id uuid [ref: > classes.id]
+    name varchar
+    description text
+    week integer
+    created_at timestamp
+    updated_at timestamp
+}
+
+Table notifications {
+    id uuid [pk]
+    teacher_id uuid [ref: > teachers.id]
+    message text
+    notification_type varchar
+    created_at timestamp
+    updated_at timestamp
+}
+
+Table payment_installments {
+    id uuid [pk]
+    payment_id uuid [ref: - payments.id]
+    amount decimal
+    payment_method enum [note: 'via_app, via_school']
+    transaction_id varchar [null]
+    processed_by_admin_id uuid [ref: > admins.id, null]
+    payment_date timestamp
+    created_at timestamp
+    updated_at timestamp
+}
+
+Table payment_payment_types {
+    id uuid [pk]
+    payment_id uuid [ref: > payments.id]
+    payment_type_id uuid [ref: > payment_types.id]
+    amount decimal
+    created_at timestamp
+    updated_at timestamp
+    indexes {
+        (payment_id, payment_type_id) [unique]
+    }
+}
+
+Table payment_types {
+    id uuid [pk]
+    school_id uuid [ref: > schools.id]
+    name varchar [note: 'School Fees, PTA, Uniform, etc']
+    description text
+    total_amount decimal
+    allow_installments boolean [default: false]
+    created_at timestamp
+    updated_at timestamp
+}
+
+Table payments {
+    id uuid [pk]
+    student_id uuid [ref: > students.id]
+    term_id uuid [ref: > terms.id]
+    school_id uuid [ref: > schools.id]
+    payment_types_id uuid [ref: > payment_types.id]
+    amount decimal
+    balance_remaining decimal
+    payment_method enum [note: 'via_app, via_school']
+    status enum [note: 'pending, completed, failed, partially_paid']
+    payment_date timestamp
+    transaction_id varchar [null]
+    processed_by_admin_id uuid [ref: > admins.id, null]
+    created_at timestamp
+    updated_at timestamp
+}
+
+Table result_subjects {
+    id uuid [pk]
+    result_id uuid [ref: > results.id]
+    subject_id uuid [ref: > subjects.id]
+    created_at timestamp
+    updated_at timestamp
+}
+
+Table results {
+    id uuid [pk]
+    student_id uuid [ref: > students.id]
+    guardian_id uuid [ref: > guardians.id]
+    class_id uuid [ref: > classes.id]
+    term_id uuid [ref: > terms.id]
+    teacher_id uuid [ref: > teachers.id]
+    continuous_assessment_score decimal
+    exam_score decimal
+    skill_acquired text [null]
+    remarks text [null]
+    created_at timestamp
+    updated_at timestamp
+}
+
+Table school_calendar {
+    id uuid [pk]
+    term_id uuid [ref: > terms.id]
+    school_id uuid [ref: > schools.id]
+    event_name varchar
+    event_date daterange
+    event_type varchar
+    description text
+    created_at timestamp
+    updated_at timestamp
+}
+
+Table school_information {
+    id uuid [pk]
+    school_id uuid [ref: - schools.id]
+    school_email varchar
+    school_contact varchar
+    website varchar [null]
+    principal_name varchar
+    pta_chairman_name varchar
+    pta_chairman_contact varchar [null]
+    school_policies text [null]
+    created_at timestamp
+    updated_at timestamp
+}
+
+Table schools {
+    id uuid [pk]
+    name varchar
+    code varchar [unique]
+    status enum [note: 'active, inactive']
+    created_at timestamp
+    updated_at timestamp
+}
+
+Table student_assignments {
+    id uuid [pk]
+    class_assignment_id uuid [ref: > class_assignments.id]
+    student_id uuid [ref: > students.id]
+    submission_date timestamp
+    submission_url varchar [null]
+    score decimal [null]
+    status enum [note: 'pending, submitted, graded']
+    remarks text [null]
+    created_at timestamp
+    updated_at timestamp
+}
+
+Table student_daily_activities {
+    id uuid [pk]
+    student_id uuid [ref: > students.id]
+    activity_id uuid [ref: > daily_activities.id]
+    attendance_status enum [note: 'Present, Absent, Late']
+    participation_score decimal [null]
+    remarks text [null]
+    created_at timestamp
+    updated_at timestamp
+}
+
+Table student_notifications {
+    id uuid [pk]
+    student_id uuid [ref: > students.id]
+    notification_id uuid [ref: > notifications.id]
+    is_read boolean [default: false]
+    read_at timestamp [null]
+    created_at timestamp
+    updated_at timestamp
+}
+
+Table student_wallets {
+    id uuid [pk]
+    student_id uuid [ref: - students.id]
+    balance decimal [default: 0]
+    status enum [note: 'active, frozen']
+    created_at timestamp
+    updated_at timestamp
+}
+
+Table students {
+    id uuid [pk]
+    class_id uuid [ref: > classes.id]
+    school_id uuid [ref: > schools.id]
+    first_name varchar
+    last_name varchar
+    middle_name varchar [null]
+    student_unique_id varchar [unique]
+    date_of_birth date
+    gender enum [note: 'M, F']
+    medical_conditions text [null]
+    doctor_name varchar [null]
+    doctor_phone varchar [null]
+    created_at timestamp
+    updated_at timestamp
+}
+
+Table subjects {
+    id uuid [pk]
+    school_id uuid [ref: > schools.id]
+    subject_name varchar
+    description text
+    subject_image_url varchar [null]
+    created_at timestamp
+    updated_at timestamp
+}
+
+Table teacher_classes {
+    id uuid [pk]
+    teacher_id uuid [ref: > teachers.id]
+    class_id uuid [ref: > classes.id]
+    teacher_type enum [note: 'form_teacher, subject_teacher']
+    assigned_date date
+    status enum [note: 'active, inactive']
+    created_at timestamp
+    updated_at timestamp
+    indexes {
+        (teacher_id, class_id) [unique]
+    }
+}
+
+Table teacher_subjects {
+    id uuid [pk]
+    teacher_id uuid [ref: > teachers.id]
+    subject_id uuid [ref: > subjects.id]
+    created_at timestamp
+    updated_at timestamp
+    indexes {
+        (teacher_id, subject_id) [unique]
+    }
+}
+
+Table teachers {
+    id uuid [pk]
+    user_id uuid [ref: - users.id]
+    school_id uuid [ref: > schools.id]
+    qualification varchar
+    image_url varchar [null]
+    certificate_url varchar [null]
+    resume_url varchar [null]
+    other_positions varchar [null]
+    description text
+    created_at timestamp
+    updated_at timestamp
+}
+
+Table terms {
+    id uuid [pk]
+    school_id uuid [ref: > schools.id]
+    term_name varchar
+    academic_year varchar
+    start_date date
+    end_date date
+    status varchar
+    created_at timestamp
+    updated_at timestamp
+}
+
+Table topic_images {
+    id uuid [pk]
+    topic_id uuid [ref: > topics.id]
+    image_url varchar
+    image_caption text [null]
+    position_index integer [note: 'Order of image in content']
+    section_identifier varchar [note: 'Identifies which part of content']
+    created_at timestamp
+    updated_at timestamp
+}
+
+Table topics {
+    id uuid [pk]
+    subject_id uuid [ref: > subjects.id]
+    teacher_id uuid [ref: > teachers.id]
+    lesson_note_id uuid [ref: > lesson_notes.id]
+    topic_name varchar
+    topic_description text
+    topic_content text
+    created_at timestamp
+    updated_at timestamp
+}
+
+Table users {
+    id uuid [pk]
+    first_name varchar
+    last_name varchar
+    middle_name varchar [null]
+    username varchar [unique]
+    password varchar
+    phone varchar [unique]
+    email varchar 
+    user_type enum [note: 'Teacher, Guardian, Admin, Super_admin']
+    created_at timestamp
+    updated_at timestamp
+}
+
+Table wallet_accounts {
+    id uuid [pk]
+    student_wallet_id uuid [ref: - student_wallets.id]
+    bank_name varchar
+    account_number varchar [unique]
+    account_name varchar
+    reference_code varchar [unique]
+    status enum [note: 'active, inactive']
+    created_at timestamp
+    updated_at timestamp
+}
+
+Table wallet_transactions {
+    id uuid [pk]
+    student_wallet_id uuid [ref: > student_wallets.id]
+    amount decimal
+    transaction_type enum [note: 'credit, debit']
+    payment_id uuid [ref: - payments.id, null]
+    transaction_reference varchar
+    description text
+    created_at timestamp
+    updated_at timestamp
+}

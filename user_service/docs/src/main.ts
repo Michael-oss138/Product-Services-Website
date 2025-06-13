@@ -1,5 +1,6 @@
-import { createApiReference } from '@scalar/api-reference'
+import { createApiReference } from "@scalar/api-reference";
+import openapiYaml from "../build/openapi.yaml?raw";
 
-createApiReference('#app', {
-  url: '/public/openapi.yaml'
-})
+createApiReference("#app", {
+	content: openapiYaml,
+});
