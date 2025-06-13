@@ -8,3 +8,15 @@ export const signupUser = catchAsync(async (req, res) => {
     message: "User created!",
   });
 });
+export const signinUser = catchAsync(async (req, res) => {
+  const accessToken = await authService.signinUser(
+    req.body,
+    req.headers,
+    req.ip
+  );
+  res.status(200).json({
+    success: true,
+    message: "Signin successful!",
+    accessToken,
+  });
+});

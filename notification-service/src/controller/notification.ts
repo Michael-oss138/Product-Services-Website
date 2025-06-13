@@ -1,10 +1,12 @@
 import catchAsync from "../utils/catchAsync";
 import { NotificationType } from "../models/Notification";
 import redisService from "../service/redis/redisService";
+import EmailService from "../service/notification/EmailService";
 
 export const createEmailNotification = catchAsync(async (req, res) => {
-  const notificationData: NotificationType = req.body;
-  await redisService.saveNotification(notificationData);
+  const { name, email, subject, message } = req.body;
+  const emailService = new EmailService(name, email, subject, message);
+  await emailService.sendSingleEmail();
   res.status(201).json({ success: true, message: "Notification sent!" });
 });
 

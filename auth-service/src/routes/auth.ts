@@ -5,5 +5,6 @@ import permission from "../middlewares/permission";
 const router = Router();
 
 router.route("/signup").post([permission, controller.signupUser]);
+router.route("/signin").post(controller.signinUser);
 
 export default router;
