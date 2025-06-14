@@ -1,0 +1,72 @@
+direction: right
+
+users: {
+  shape: sql_table
+  id: uuid {constraint: primary_key}
+  first_name: string
+  last_name: string
+  middle_name: string
+  phone: string | null
+  email: string | null
+  user_type: string
+  created_at: timestamp
+  updated_at: timestamp
+}
+
+admins: {
+  shape: sql_table
+  id: uuid {constraint: primary_key}
+  user_id: uuid {constraint: foreign_key}
+  role: string
+  permissions: string
+  school_id: uuid | null {constraint: foreign_key}
+  created_at: timestamp
+  updated_at: timestamp
+}
+
+teachers: {
+  shape: sql_table
+  id: uuid {constraint: primary_key}
+  user_id: uuid {constraint: foreign_key}
+  school_id: uuid {constraint: foreign_key}
+  created_at: timestamp
+  updated_at: timestamp
+}
+
+guardians: {
+  shape: sql_table
+  id: uuid {constraint: primary_key}
+  user_id: uuid {constraint: foreign_key}
+  created_at: timestamp
+  updated_at: timestamp
+}
+
+students: {
+  shape: sql_table
+  id: uuid {constraint: primary_key}
+  user_id: uuid {constraint: foreign_key}
+  school_id: uuid {constraint: foreign_key}
+  date_of_birth: date
+  gender: string
+  medical_conditions: string | null
+  created_at: timestamp
+  updated_at: timestamp
+}
+
+guardian_students: {
+  shape: sql_table
+  id: uuid {constraint: primary_key}
+  student_id: uuid {constraint: foreign_key}
+  guardian_id: uuid {constraint: foreign_key}
+  relationship_type: string
+  created_at: timestamp
+  updated_at: timestamp
+}
+
+# Relationships
+admins.user_id -> users.id
+teachers.user_id -> users.id
+guardians.user_id -> users.id
+students.user_id -> users.id
+guardian_students.student_id -> students.id
+guardian_students.guardian_id -> guardians.id
