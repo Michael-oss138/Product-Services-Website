@@ -4,7 +4,7 @@ from django.urls import path
 from django.views.decorators.http import require_http_methods
 from django.views.decorators.csrf import csrf_exempt
 from codegen.Api.Users.Create.Request import Body
-from .validator import validate
+from .middleware import validate
 
 # from codegen.Api.Users.Create.Response.Success import Success as CreateSuccess
 # from codegen.Api.Users.Create.Response.Error import Error as CreateError
