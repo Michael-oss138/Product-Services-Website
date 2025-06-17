@@ -1,9 +1,8 @@
 import app from "./app";
-import { createServer } from "http";
+import { serve } from "@hono/node-server";
 import env from "./config/env";
 
-const server = createServer(app);
-server.listen(env.port);
+const server = serve({ port: Number(env.port!), fetch: app.fetch });
 server.on("listening", () => {
   console.log(`Listening on port: ${env.port}`);
 });

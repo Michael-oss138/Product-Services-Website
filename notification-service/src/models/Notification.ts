@@ -4,6 +4,5 @@ export interface NotificationType {
   message: string;
   title: string;
   created_on: string;
-  updated_on: string;
   read: boolean;
 }

@@ -22,11 +22,15 @@
   },
   "homepage": "https://github.com/MetroBlue/Educesol-backend-microservices/tree/master#readme",
   "dependencies": {
+    "@hono/node-server": "^1.14.4",
+    "@hono/zod-validator": "^0.7.0",
     "body-parser": "^2.2.0",
     "dotenv": "^16.5.0",
     "express": "^5.1.0",
+    "hono": "^4.7.11",
     "nodemailer": "^7.0.3",
-    "redis": "^5.5.5"
+    "redis": "^5.5.5",
+    "zod": "^3.25.64"
   },
   "devDependencies": {
     "@types/dotenv": "^8.2.3",
