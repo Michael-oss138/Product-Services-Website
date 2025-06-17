@@ -7,4 +7,4 @@ requires-python = ">=3.13"
 dependencies = ["django>=5.2.3", "pydantic>=2.11.7"]
 
 [dependency-groups]
-dev = ["datamodel-code-generator>=0.31.0"]
+dev = ["datamodel-code-generator>=0.31.0", "ruff>=0.11.13"]

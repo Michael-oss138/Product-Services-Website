@@ -1,5 +1,5 @@
 emit:
-  - "@typespec/http-client-python"
+  # - "@typespec/http-client-python"
   - "@typespec/openapi3"
 
 options:
