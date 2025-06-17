@@ -39,5 +39,5 @@ uv run dev
 ### Codegen
 
 ```bash
-datamodel-codegen --input ./docs/build/openapi.yaml --input-file-type openapi --output codegen --output-model-type pydantic_v2.BaseModel^C
+datamodel-codegen --input ./docs/build/openapi.yaml --input-file-type openapi --output codegen --output-model-type pydantic_v2.BaseModel
 ```

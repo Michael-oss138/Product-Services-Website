@@ -246,15 +246,19 @@ namespace Api {
                         code: "ERR_STUDENT_ID_ALREADY_EXISTS";
                     }
 
-                    alias Error =
-                        | PhoneAlreadyExistsError
-                        | EmailAlreadyExistsError
-                        | StudentIdAlreadyExistsError
-                        | BadRequestError
-                        | UnexpectedError;
+                    union Error {
+                        phone: PhoneAlreadyExistsError,
+                        email: EmailAlreadyExistsError,
+                        student_id: StudentIdAlreadyExistsError,
+                        bad_request: BadRequestError,
+                        unexpected: UnexpectedError,
+                    }
                 }
 
-                alias Response = Success.Success | Error.Error;
+                union Response {
+                    success: Success.Success,
+                    error: Error.Error,
+                }
             }
 
             @post

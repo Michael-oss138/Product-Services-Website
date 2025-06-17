@@ -1,3 +1,3 @@
-from .view import view, url
+from .handler import handler, url
 
-__all__ = ["view", "url"]
+__all__ = ["handler", "url"]

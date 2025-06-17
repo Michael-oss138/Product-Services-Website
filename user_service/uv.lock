@@ -281,6 +281,15 @@ wheels = [
 ]
 
 [[package]]
+name = "result"
+version = "0.17.0"
+source = { registry = "https://pypi.org/simple" }
+sdist = { url = "https://files.pythonhosted.org/packages/a3/47/2175be65744aa4d8419c27bd3a7a7d65af5bcad7a4dc6a812c00778754f0/result-0.17.0.tar.gz", hash = "sha256:b73da420c0cb1a3bf741dbd41ff96dedafaad6a1b3ef437a9e33e380bb0d91cf", size = 20180, upload-time = "2024-06-02T16:39:54.51Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/e2/90/19110ce9374c3db619e2df0816f2c58e4ddc5cdad5f7284cd81d8b30b7cb/result-0.17.0-py3-none-any.whl", hash = "sha256:49fd668b4951ad15800b8ccefd98b6b94effc789607e19c65064b775570933e8", size = 11689, upload-time = "2024-06-02T16:39:52.715Z" },
+]
+
+[[package]]
 name = "ruff"
 version = "0.11.13"
 source = { registry = "https://pypi.org/simple" }
@@ -363,6 +372,7 @@ source = { virtual = "." }
 dependencies = [
     { name = "django" },
     { name = "pydantic" },
+    { name = "result" },
 ]
 
 [package.dev-dependencies]
@@ -375,6 +385,7 @@ dev = [
 requires-dist = [
     { name = "django", specifier = ">=5.2.3" },
     { name = "pydantic", specifier = ">=2.11.7" },
+    { name = "result", specifier = ">=0.17.0" },
 ]
 
 [package.metadata.requires-dev]

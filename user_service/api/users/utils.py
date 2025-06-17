@@ -1,7 +1,9 @@
-import json
+from pydantic import BaseModel
+from typing import TypeVar, Type
 
 
-def validate_json_bytestring(raw_payload: bytes, model: BaseModel) -> BaseModel:
-    payload = json.loads(raw_payload)
-    validated_payload = model(payload)
-    return validated_payload
+T = TypeVar("T", bound=BaseModel)
+
+
+def validate_json_bytestring(raw_payload: bytes, model: Type[T]) -> T:
+    return model.model_validate_json(raw_payload)
