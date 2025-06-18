@@ -14,7 +14,6 @@ class ValidationError(Exception):
     response: JsonResponse
 
     def __init__(self, errors: list[ErrorDetails]):
-        x = errors[0]["loc"]
         super().__init__()
         self.response = JsonResponse(
             BadRequestError(

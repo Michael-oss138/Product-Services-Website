@@ -71,6 +71,10 @@ namespace Api {
         @statusCode _code: 404;
         code: "ERR_${T}_NOT_FOUND";
     }
+    @error
+    model UserNotFoundError {
+        ...NotFoundError<"USER">;
+    }
 
     @tag("Users")
     @route("/")
@@ -362,15 +366,23 @@ namespace Api {
 
                 namespace Response {
                     namespace Success {
-                        model Success {
+                        model UserUpdated {
                             @statusCode _code: 200;
                             code: "USER_UPDATED";
-                            data: User;
+                            // data: User;
+                        }
+
+                        union Success {
+                            user_updated: UserUpdated,
                         }
                     }
 
                     namespace Error {
-                        alias Error = NotFoundError<"USER"> | BadRequestError | UnexpectedError;
+                        union Error {
+                            user_not_found: UserNotFoundError,
+                            bad_request: BadRequestError,
+                            unexpected: UnexpectedError,
+                        }
                     }
 
                     alias Response = Success.Success | Error.Error;
@@ -382,34 +394,6 @@ namespace Api {
                     @path id: Request.Path,
                     @body body: Request.Body,
                 ): Response.Response;
-            }
-
-            namespace Delete {
-                namespace Request {
-                    model Path {
-                        @path
-                        id: string;
-                    }
-                }
-
-                namespace Response {
-                    namespace Success {
-                        model Success {
-                            @statusCode _code: 200;
-                            code: "USER_DELETED";
-                        }
-                    }
-
-                    namespace Error {
-                        alias Error = NotFoundError<"USER"> | UnexpectedError;
-                    }
-
-                    alias Response = Success.Success | Error.Error;
-                }
-
-                @delete
-                @doc("Delete a user by ID")
-                op deleteUserById(@path id: Request.Path): Response.Response;
             }
         }
     }

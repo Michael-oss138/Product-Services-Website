@@ -28,8 +28,6 @@ def handler(request: HttpRequest):
                 status_code = 409
             case "ERR_PHONE_ALREADY_EXISTS":
                 status_code = 409
-            case "ERR_STUDENT_ID_ALREADY_EXISTS":
-                status_code = 409
             case _:
                 status_code = 500
     else:
