@@ -8,9 +8,9 @@ from .types import Request, Response
 
 def service(id: str, payload: Request.Body) -> Result[Response.Success, Response.Error]:
     with transaction.atomic():
-        user = User.objects.get(id=id)
-
-        if not user:
+        try:
+            User.objects.get(id=id)
+        except User.DoesNotExist:
             return Err(
                 Response.Error(root=UserNotFoundError(code="ERR_USER_NOT_FOUND"))
             )

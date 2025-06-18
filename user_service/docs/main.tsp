@@ -295,7 +295,10 @@ namespace Api {
                     }
 
                     namespace Error {
-                        alias Error = NotFoundError<"USER"> | UnexpectedError;
+                        union Error {
+                            not_found: UserNotFoundError,
+                            unexpected: UnexpectedError,
+                        }
                     }
 
                     alias Response = Success.Success | Error.Error;
