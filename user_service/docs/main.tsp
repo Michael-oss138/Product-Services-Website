@@ -7,33 +7,19 @@ namespace ApiDocs;
 
 @doc("API Documentation for the Educesol User Service")
 namespace Api {
-    @example("f47ac10b-58cc-4372-a567-0e02b2c3d479")
-    scalar Id extends string;
-
-    @example("John")
-    scalar FirstName extends string;
-
-    @example("Doe")
-    scalar LastName extends string;
-
-    @example("Smith")
-    scalar MiddleName extends string;
-
-    @example("+2348123456789")
-    scalar PhoneNumber extends string;
-
-    @example("john.doe@mail.com")
-    scalar Email extends string;
-
-    @example("2021-09-01T12:00:00Z")
-    scalar DateTime extends string;
-
     enum UserType {
         TEACHER,
         GUARDIAN,
         ADMIN,
         SUPER_ADMIN,
         STUDENT,
+    }
+
+    enum UserTypeLiteral {
+        STUDENT,
+        TEACHER,
+        ADMIN,
+        GUARDIAN,
     }
 
     enum Gender {
@@ -106,15 +92,15 @@ namespace Api {
     @route("/")
     namespace Users {
         model BaseUser {
-            id: Id;
-            first_name: FirstName;
-            last_name: LastName;
-            middle_name?: MiddleName;
-            phone?: PhoneNumber;
-            email?: Email;
+            id: string;
+            first_name: string;
+            last_name: string;
+            middle_name?: string;
+            phone?: string;
+            email?: string;
             user_type: UserType;
-            created_at: DateTime;
-            updated_at: DateTime;
+            created_at: string;
+            updated_at: string;
         }
 
         model StudentProfile {
@@ -122,40 +108,40 @@ namespace Api {
             date_of_birth: string;
             gender: Gender;
             medical_conditions?: string;
-            school_id: Id;
+            school_id: string;
         }
 
         model TeacherProfile {
-            school_id: Id;
+            school_id: string;
         }
 
         model AdminProfile {
             role: AdminRole;
             permissions: string;
-            school_id?: Id;
+            school_id?: string;
         }
 
         @discriminator("type")
         model StudentUser extends BaseUser {
-            type: "STUDENT";
+            type: UserTypeLiteral.STUDENT;
             profile: StudentProfile;
         }
 
         @discriminator("type")
         model TeacherUser extends BaseUser {
-            type: "TEACHER";
+            type: UserTypeLiteral.TEACHER;
             profile: TeacherProfile;
         }
 
         @discriminator("type")
         model AdminUser extends BaseUser {
-            type: "ADMIN";
+            type: UserTypeLiteral.ADMIN;
             profile: AdminProfile;
         }
 
         @discriminator("type")
         model GuardianUser extends BaseUser {
-            type: "GUARDIAN";
+            type: UserTypeLiteral.GUARDIAN;
         }
 
         union User {
@@ -169,45 +155,45 @@ namespace Api {
             namespace Request {
                 @discriminator("type")
                 model StudentCreate {
-                    type: "STUDENT";
-                    first_name: FirstName;
-                    last_name: LastName;
-                    middle_name?: MiddleName;
-                    phone?: PhoneNumber;
-                    email?: Email;
+                    type: UserTypeLiteral.STUDENT;
+                    first_name: string;
+                    last_name: string;
+                    middle_name?: string;
+                    phone?: string;
+                    email?: string;
                     profile: StudentProfile;
                 }
 
                 @discriminator("type")
                 model TeacherCreate {
-                    type: "TEACHER";
-                    first_name: FirstName;
-                    last_name: LastName;
-                    middle_name?: MiddleName;
-                    phone: PhoneNumber;
-                    email: Email;
+                    type: UserTypeLiteral.TEACHER;
+                    first_name: string;
+                    last_name: string;
+                    middle_name?: string;
+                    phone: string;
+                    email: string;
                     profile: TeacherProfile;
                 }
 
                 @discriminator("type")
                 model AdminCreate {
-                    type: "ADMIN";
-                    first_name: FirstName;
-                    last_name: LastName;
-                    middle_name?: MiddleName;
-                    phone: PhoneNumber;
-                    email: Email;
+                    type: UserTypeLiteral.ADMIN;
+                    first_name: string;
+                    last_name: string;
+                    middle_name?: string;
+                    phone: string;
+                    email: string;
                     profile: AdminProfile;
                 }
 
                 @discriminator("type")
                 model GuardianCreate {
-                    type: "GUARDIAN";
-                    first_name: FirstName;
-                    last_name: LastName;
-                    middle_name?: MiddleName;
-                    phone: PhoneNumber;
-                    email: Email;
+                    type: UserTypeLiteral.GUARDIAN;
+                    first_name: string;
+                    last_name: string;
+                    middle_name?: string;
+                    phone: string;
+                    email: string;
                 }
 
                 union Body {
@@ -299,7 +285,7 @@ namespace Api {
                 namespace Request {
                     model Path {
                         @path
-                        id: Id;
+                        id: string;
                     }
                 }
 
@@ -328,50 +314,50 @@ namespace Api {
                 namespace Request {
                     model Path {
                         @path
-                        id: Id;
+                        id: string;
                     }
 
                     @discriminator("type")
                     model StudentUpdate {
-                        type: "STUDENT";
-                        first_name?: FirstName;
-                        last_name?: LastName;
-                        middle_name?: MiddleName;
-                        phone?: PhoneNumber;
-                        email?: Email;
+                        type: UserTypeLiteral.STUDENT;
+                        first_name?: string;
+                        last_name?: string;
+                        middle_name?: string;
+                        phone?: string;
+                        email?: string;
                         profile?: StudentProfile;
                     }
 
                     @discriminator("type")
                     model TeacherUpdate {
-                        type: "TEACHER";
-                        first_name?: FirstName;
-                        last_name?: LastName;
-                        middle_name?: MiddleName;
-                        phone?: PhoneNumber;
-                        email?: Email;
+                        type: UserTypeLiteral.TEACHER;
+                        first_name?: string;
+                        last_name?: string;
+                        middle_name?: string;
+                        phone?: string;
+                        email?: string;
                         profile?: TeacherProfile;
                     }
 
                     @discriminator("type")
                     model AdminUpdate {
-                        type: "ADMIN";
-                        first_name?: FirstName;
-                        last_name?: LastName;
-                        middle_name?: MiddleName;
-                        phone?: PhoneNumber;
-                        email?: Email;
+                        type: UserTypeLiteral.ADMIN;
+                        first_name?: string;
+                        last_name?: string;
+                        middle_name?: string;
+                        phone?: string;
+                        email?: string;
                         profile?: AdminProfile;
                     }
 
                     @discriminator("type")
                     model GuardianUpdate {
-                        type: "GUARDIAN";
-                        first_name?: FirstName;
-                        last_name?: LastName;
-                        middle_name?: MiddleName;
-                        phone?: PhoneNumber;
-                        email?: Email;
+                        type: UserTypeLiteral.GUARDIAN;
+                        first_name?: string;
+                        last_name?: string;
+                        middle_name?: string;
+                        phone?: string;
+                        email?: string;
                     }
 
                     union Body {
@@ -410,7 +396,7 @@ namespace Api {
                 namespace Request {
                     model Path {
                         @path
-                        id: Id;
+                        id: string;
                     }
                 }
 
