@@ -1,3 +1,4 @@
+from typing import Literal
 from django.db import models
 from django.utils import timezone
 import uuid

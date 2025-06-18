@@ -10,7 +10,7 @@ def view(request):
         # Get query parameters
         page = int(request.GET.get("page", 1))
         per_page = int(request.GET.get("per_page", 10))
-        user_type = request.GET.get("type")
+        # user_type = request.GET.get("type")
 
         # TODO: Implement actual database query with filters
         users = []  # Replace with actual database query
