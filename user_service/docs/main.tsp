@@ -15,13 +15,6 @@ namespace Api {
         STUDENT,
     }
 
-    enum UserTypeLiteral {
-        STUDENT,
-        TEACHER,
-        ADMIN,
-        GUARDIAN,
-    }
-
     enum Gender {
         M,
         F,
@@ -31,6 +24,23 @@ namespace Api {
         SUPER_ADMIN,
         ACADEMIC_ADMIN,
         FINANCIAL_ADMIN,
+    }
+
+    enum ErrorCode {
+        ERR_UNEXPECTED,
+        ERR_EXPECTED_DATA_NOT_RECEIVED,
+        ERR_USER_NOT_FOUND,
+        ERR_PHONE_ALREADY_EXISTS,
+        ERR_EMAIL_ALREADY_EXISTS,
+        ERR_STUDENT_ID_ALREADY_EXISTS,
+    }
+
+    enum SuccessCode {
+        USER_CREATED,
+        USER_FOUND,
+        USER_UPDATED,
+        USER_DELETED,
+        LIST,
     }
 
     model Media {
@@ -53,7 +63,7 @@ namespace Api {
         }
 
         model Paginated<T> {
-            code: "LIST";
+            code: SuccessCode.LIST;
             data: T[];
             meta: Api.Pagination.Meta;
         }
@@ -73,13 +83,13 @@ namespace Api {
     @error
     model UnexpectedError {
         @statusCode _code: 500;
-        code: "ERR_UNEXPECTED";
+        code: ErrorCode.ERR_UNEXPECTED;
     }
 
     @error
     model BadRequestError {
         @statusCode _code: 400;
-        code: "ERR_EXPECTED_DATA_NOT_RECEIVED";
+        code: ErrorCode.ERR_EXPECTED_DATA_NOT_RECEIVED;
     }
 
     @error
@@ -123,25 +133,25 @@ namespace Api {
 
         @discriminator("type")
         model StudentUser extends BaseUser {
-            type: UserTypeLiteral.STUDENT;
+            type: UserType.STUDENT;
             profile: StudentProfile;
         }
 
         @discriminator("type")
         model TeacherUser extends BaseUser {
-            type: UserTypeLiteral.TEACHER;
+            type: UserType.TEACHER;
             profile: TeacherProfile;
         }
 
         @discriminator("type")
         model AdminUser extends BaseUser {
-            type: UserTypeLiteral.ADMIN;
+            type: UserType.ADMIN;
             profile: AdminProfile;
         }
 
         @discriminator("type")
         model GuardianUser extends BaseUser {
-            type: UserTypeLiteral.GUARDIAN;
+            type: UserType.GUARDIAN;
         }
 
         union User {
@@ -155,7 +165,7 @@ namespace Api {
             namespace Request {
                 @discriminator("type")
                 model StudentCreate {
-                    type: UserTypeLiteral.STUDENT;
+                    type: UserType.STUDENT;
                     first_name: string;
                     last_name: string;
                     middle_name?: string;
@@ -166,7 +176,7 @@ namespace Api {
 
                 @discriminator("type")
                 model TeacherCreate {
-                    type: UserTypeLiteral.TEACHER;
+                    type: UserType.TEACHER;
                     first_name: string;
                     last_name: string;
                     middle_name?: string;
@@ -177,7 +187,7 @@ namespace Api {
 
                 @discriminator("type")
                 model AdminCreate {
-                    type: UserTypeLiteral.ADMIN;
+                    type: UserType.ADMIN;
                     first_name: string;
                     last_name: string;
                     middle_name?: string;
@@ -188,7 +198,7 @@ namespace Api {
 
                 @discriminator("type")
                 model GuardianCreate {
-                    type: UserTypeLiteral.GUARDIAN;
+                    type: UserType.GUARDIAN;
                     first_name: string;
                     last_name: string;
                     middle_name?: string;
@@ -208,7 +218,7 @@ namespace Api {
                 namespace Success {
                     model Success {
                         @statusCode _code: 201;
-                        code: "USER_CREATED";
+                        code: SuccessCode.USER_CREATED;
                         data: User;
                     }
                 }
@@ -217,19 +227,19 @@ namespace Api {
                     @error
                     model PhoneAlreadyExistsError {
                         @statusCode _code: 409;
-                        code: "ERR_PHONE_ALREADY_EXISTS";
+                        code: ErrorCode.ERR_PHONE_ALREADY_EXISTS;
                     }
 
                     @error
                     model EmailAlreadyExistsError {
                         @statusCode _code: 409;
-                        code: "ERR_EMAIL_ALREADY_EXISTS";
+                        code: ErrorCode.ERR_EMAIL_ALREADY_EXISTS;
                     }
 
                     @error
                     model StudentIdAlreadyExistsError {
                         @statusCode _code: 409;
-                        code: "ERR_STUDENT_ID_ALREADY_EXISTS";
+                        code: ErrorCode.ERR_STUDENT_ID_ALREADY_EXISTS;
                     }
 
                     union Error {
@@ -293,7 +303,7 @@ namespace Api {
                     namespace Success {
                         model Success {
                             @statusCode _code: 200;
-                            code: "USER_FOUND";
+                            code: SuccessCode.USER_FOUND;
                             data: User;
                         }
                     }
@@ -319,7 +329,7 @@ namespace Api {
 
                     @discriminator("type")
                     model StudentUpdate {
-                        type: UserTypeLiteral.STUDENT;
+                        type: UserType.STUDENT;
                         first_name?: string;
                         last_name?: string;
                         middle_name?: string;
@@ -330,7 +340,7 @@ namespace Api {
 
                     @discriminator("type")
                     model TeacherUpdate {
-                        type: UserTypeLiteral.TEACHER;
+                        type: UserType.TEACHER;
                         first_name?: string;
                         last_name?: string;
                         middle_name?: string;
@@ -341,7 +351,7 @@ namespace Api {
 
                     @discriminator("type")
                     model AdminUpdate {
-                        type: UserTypeLiteral.ADMIN;
+                        type: UserType.ADMIN;
                         first_name?: string;
                         last_name?: string;
                         middle_name?: string;
@@ -352,7 +362,7 @@ namespace Api {
 
                     @discriminator("type")
                     model GuardianUpdate {
-                        type: UserTypeLiteral.GUARDIAN;
+                        type: UserType.GUARDIAN;
                         first_name?: string;
                         last_name?: string;
                         middle_name?: string;
@@ -372,7 +382,7 @@ namespace Api {
                     namespace Success {
                         model Success {
                             @statusCode _code: 200;
-                            code: "USER_UPDATED";
+                            code: SuccessCode.USER_UPDATED;
                             data: User;
                         }
                     }
@@ -404,7 +414,7 @@ namespace Api {
                     namespace Success {
                         model Success {
                             @statusCode _code: 200;
-                            code: "USER_DELETED";
+                            code: SuccessCode.USER_DELETED;
                         }
                     }
 
