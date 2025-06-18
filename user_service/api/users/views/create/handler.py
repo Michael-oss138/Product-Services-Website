@@ -35,7 +35,7 @@ def handler(request: HttpRequest):
     else:
         status_code = 201
 
-    return JsonResponse(response.model_dump(), status=status_code)
+    return JsonResponse(response.model_dump(mode="json"), status=status_code)
 
 
 url = path("", handler)
