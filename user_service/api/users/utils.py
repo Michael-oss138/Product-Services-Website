@@ -32,8 +32,15 @@ class ValidationError(Exception):
         )
 
 
-def validate_json_bytestring(raw_payload: bytes, model: Type[T]) -> T:
+def validate_json(raw_payload: bytes, model: Type[T]) -> T:
     try:
         return model.model_validate_json(raw_payload)
+    except PydanticValidationError as e:
+        raise ValidationError(e.errors())
+
+
+def validate(obj: dict, model: Type[T]) -> T:
+    try:
+        return model.model_validate(obj)
     except PydanticValidationError as e:
         raise ValidationError(e.errors())

@@ -239,20 +239,28 @@ namespace Api {
         namespace List {
             namespace Request {
                 model UserListQuery {
+                    ...Pagination.Query;
+
                     @query
                     type?: "STUDENT" | "TEACHER" | "ADMIN" | "GUARDIAN";
                 }
 
-                alias Query = Pagination.Query & UserListQuery;
+                model Query {
+                    ...UserListQuery;
+                }
             }
 
             namespace Response {
                 namespace Success {
-                    alias Success = Pagination.Paginated<User>;
+                    union Success {
+                        users: Pagination.Paginated<User>,
+                    }
                 }
 
                 namespace Error {
-                    alias Error = UnexpectedError;
+                    union Error {
+                        unexpected: UnexpectedError,
+                    }
                 }
 
                 alias Response = Success.Success | Error.Error;

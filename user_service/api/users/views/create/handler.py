@@ -1,7 +1,7 @@
 from django.http import HttpRequest, JsonResponse
 from django.db import transaction
 from django.urls import path
-from django.views.decorators.http import require_http_methods
+from django.views.decorators.http import require_POST
 from django.views.decorators.csrf import csrf_exempt
 from .service import service
 from .middleware import middleware
@@ -9,7 +9,7 @@ from result import is_err
 from .types import Response
 
 
-@require_http_methods(["POST"])
+@require_POST
 @csrf_exempt
 @transaction.atomic
 def handler(request: HttpRequest):
@@ -36,6 +36,3 @@ def handler(request: HttpRequest):
         status_code = 201
 
     return JsonResponse(response.model_dump(mode="json"), status=status_code)
-
-
-url = path("", handler)

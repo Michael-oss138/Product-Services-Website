@@ -11,15 +11,20 @@ class User(models.Model):
     middle_name = models.CharField(max_length=255, null=True, blank=True)
     phone = models.CharField(max_length=20, null=True, blank=True)
     email = models.EmailField(null=True, blank=True)
-    user_type = models.CharField(
-        max_length=20,
-        choices=[
-            ("TEACHER", "Teacher"),
-            ("GUARDIAN", "Guardian"),
-            ("ADMIN", "Admin"),
-            ("SUPER_ADMIN", "Super Admin"),
-            ("STUDENT", "Student"),
+    user_type = cast(
+        models.CharField[
+            Literal["TEACHER", "GUARDIAN", "ADMIN", "SUPER_ADMIN", "STUDENT"]
         ],
+        models.CharField(
+            max_length=20,
+            choices=[
+                ("TEACHER", "Teacher"),
+                ("GUARDIAN", "Guardian"),
+                ("ADMIN", "Admin"),
+                ("SUPER_ADMIN", "Super Admin"),
+                ("STUDENT", "Student"),
+            ],
+        ),
     )
     created_at = models.DateTimeField(default=timezone.now)
     updated_at = models.DateTimeField(auto_now=True)
