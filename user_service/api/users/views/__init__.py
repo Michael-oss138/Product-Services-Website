@@ -1,5 +1,7 @@
 from django.http import JsonResponse
 from django.urls import path
+
+from api.users.views import by_id
 from .list.handler import handler as list_handler
 from .create.handler import handler as create_handler
 from django.views.decorators.csrf import csrf_exempt
@@ -17,4 +19,4 @@ def root_handler(request):
 
 urls = [
     path("", root_handler),
-]
+] + by_id.urls

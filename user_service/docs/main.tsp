@@ -313,54 +313,11 @@ namespace Api {
                         id: string;
                     }
 
-                    @discriminator("type")
-                    model StudentUpdate {
-                        type: "STUDENT";
-                        first_name?: string;
-                        last_name?: string;
-                        middle_name?: string;
-                        phone?: string;
-                        email?: string;
-                        profile?: StudentProfile;
-                    }
-
-                    @discriminator("type")
-                    model TeacherUpdate {
-                        type: "TEACHER";
-                        first_name?: string;
-                        last_name?: string;
-                        middle_name?: string;
-                        phone?: string;
-                        email?: string;
-                        profile?: TeacherProfile;
-                    }
-
-                    @discriminator("type")
-                    model AdminUpdate {
-                        type: "ADMIN";
-                        first_name?: string;
-                        last_name?: string;
-                        middle_name?: string;
-                        phone?: string;
-                        email?: string;
-                        profile?: AdminProfile;
-                    }
-
-                    @discriminator("type")
-                    model GuardianUpdate {
-                        type: "GUARDIAN";
-                        first_name?: string;
-                        last_name?: string;
-                        middle_name?: string;
-                        phone?: string;
-                        email?: string;
-                    }
-
-                    union Body {
-                        student: StudentUpdate,
-                        teacher: TeacherUpdate,
-                        admin: AdminUpdate,
-                        guardian: GuardianUpdate,
+                    model Body {
+                        ...OmitProperties<
+                            BaseUser,
+                            "id" | "user_type" | "created_at" | "updated_at"
+                        >;
                     }
                 }
 

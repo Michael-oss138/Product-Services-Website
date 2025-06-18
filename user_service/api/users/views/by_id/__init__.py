@@ -1,7 +1,17 @@
-from .get import view as get_view, url as get_url
-from .update import view as update_view, url as update_url
-from .delete import view as delete_view, url as delete_url
+from django.http import JsonResponse
+from django.urls import path
+from .update.handler import handler as update_handler
+from django.views.decorators.csrf import csrf_exempt
 
-__all__ = ["get_view", "update_view", "delete_view"]
 
-urls = [get_url, update_url, delete_url]
+@csrf_exempt
+def root_handler(request, id: str):
+    if request.method == "PATCH":
+        return update_handler(request, id)
+    else:
+        return JsonResponse({"code": "ERR_METHOD_NOT_ALLOWED"}, status=405)
+
+
+urls = [
+    path("<str:id>", root_handler),
+]

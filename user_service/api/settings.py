@@ -125,3 +125,5 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 HANDLER404 = "api.views.handler404"
 HANDLER500 = "api.views.handler500"
+
+# APPEND_SLASH = False
