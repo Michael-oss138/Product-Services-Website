@@ -4,7 +4,7 @@ from typing import TypeVar, Type
 
 from pydantic_core import ErrorDetails
 
-from codegen.Api import BadRequestError, Code
+from codegen.Api import BadRequestError, ValidationErrorDetail
 
 
 T = TypeVar("T", bound=BaseModel)
@@ -14,11 +14,20 @@ class ValidationError(Exception):
     response: JsonResponse
 
     def __init__(self, errors: list[ErrorDetails]):
+        x = errors[0]["loc"]
         super().__init__()
         self.response = JsonResponse(
-            BadRequestError(code=Code.ERR_EXPECTED_DATA_NOT_RECEIVED).model_dump(
-                mode="json"
-            ),
+            BadRequestError(
+                code="ERR_EXPECTED_DATA_NOT_RECEIVED",
+                errors=[
+                    ValidationErrorDetail(
+                        type=error["type"],
+                        loc=list(map(str, error["loc"])),
+                        msg=error["msg"],
+                    )
+                    for error in errors
+                ],
+            ).model_dump(mode="json"),
             status=400,
         )
 

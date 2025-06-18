@@ -13,7 +13,7 @@ from .types import Response
 @csrf_exempt
 @transaction.atomic
 def handler(request: HttpRequest):
-    response: Response.Response
+    response: Response.Success | Response.Error
     status_code: int
 
     payload = middleware(request)
@@ -23,7 +23,7 @@ def handler(request: HttpRequest):
     response = result.value
 
     if is_err(result):
-        match result.value.root.code.value:
+        match result.value.root.code:
             case "ERR_EMAIL_ALREADY_EXISTS":
                 status_code = 409
             case "ERR_PHONE_ALREADY_EXISTS":

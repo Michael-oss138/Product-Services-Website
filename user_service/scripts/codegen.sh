@@ -5,4 +5,6 @@ datamodel-codegen \
     --input-file-type openapi \
     --output codegen \
     --output-model-type pydantic_v2.BaseModel \
-    --enum-field-as-literal all
+    --enum-field-as-literal all \
+    --use-union-operator \
+    --collapse-root-models

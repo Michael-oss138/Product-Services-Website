@@ -17,13 +17,13 @@ namespace Api {
 
     namespace Pagination {
         model Options {
-            page: int64;
-            per_page: int64;
+            page: integer;
+            per_page: integer;
         }
 
         model Meta {
             ...Api.Pagination.Options;
-            total: int64;
+            total: integer;
         }
 
         model Paginated<T> {
@@ -35,12 +35,12 @@ namespace Api {
         model Query {
             @query
             @minValue(1)
-            page?: int64;
+            page?: integer;
 
             @query
             @minValue(10)
             @maxValue(100)
-            per_page?: int64;
+            per_page?: integer;
         }
     }
 
@@ -50,10 +50,20 @@ namespace Api {
         code: "ERR_UNEXPECTED";
     }
 
+    model ValidationErrorDetail {
+        type: string;
+        loc: (string | integer)[];
+        msg: string;
+        input?: string;
+        ctx?: Record<string>;
+        url?: string;
+    }
+
     @error
     model BadRequestError {
         @statusCode _code: 400;
         code: "ERR_EXPECTED_DATA_NOT_RECEIVED";
+        errors: ValidationErrorDetail[];
     }
 
     @error
@@ -79,17 +89,22 @@ namespace Api {
 
         model StudentProfile {
             id: string;
+
+            @example("2000-01-01")
             date_of_birth: string;
+
             gender: "M" | "F";
             medical_conditions?: string;
             school_id: string;
         }
 
         model TeacherProfile {
+            id: string;
             school_id: string;
         }
 
         model AdminProfile {
+            id: string;
             role: "SUPER_ADMIN" | "ACADEMIC_ADMIN" | "FINANCIAL_ADMIN";
             permissions: string;
             school_id?: string;
@@ -116,6 +131,7 @@ namespace Api {
         @discriminator("type")
         model GuardianUser extends BaseUser {
             type: "GUARDIAN";
+            id: string;
         }
 
         union User {
@@ -135,7 +151,7 @@ namespace Api {
                     middle_name?: string;
                     phone?: string;
                     email?: string;
-                    profile: StudentProfile;
+                    profile: OmitProperties<StudentProfile, "id">;
                 }
 
                 @discriminator("type")
@@ -146,7 +162,7 @@ namespace Api {
                     middle_name?: string;
                     phone: string;
                     email: string;
-                    profile: TeacherProfile;
+                    profile: OmitProperties<TeacherProfile, "id">;
                 }
 
                 @discriminator("type")
@@ -157,7 +173,7 @@ namespace Api {
                     middle_name?: string;
                     phone: string;
                     email: string;
-                    profile: AdminProfile;
+                    profile: OmitProperties<AdminProfile, "id">;
                 }
 
                 @discriminator("type")
@@ -180,10 +196,14 @@ namespace Api {
 
             namespace Response {
                 namespace Success {
-                    model Success {
+                    model UserCreated {
                         @statusCode _code: 201;
                         code: "USER_CREATED";
                         data: User;
+                    }
+
+                    union Success {
+                        user_created: UserCreated,
                     }
                 }
 
@@ -200,25 +220,15 @@ namespace Api {
                         code: "ERR_EMAIL_ALREADY_EXISTS";
                     }
 
-                    @error
-                    model StudentIdAlreadyExistsError {
-                        @statusCode _code: 409;
-                        code: "ERR_STUDENT_ID_ALREADY_EXISTS";
-                    }
-
                     union Error {
-                        phone: PhoneAlreadyExistsError,
-                        email: EmailAlreadyExistsError,
-                        student_id: StudentIdAlreadyExistsError,
+                        phone_already_exists: PhoneAlreadyExistsError,
+                        email_already_exists: EmailAlreadyExistsError,
                         bad_request: BadRequestError,
                         unexpected: UnexpectedError,
                     }
                 }
 
-                union Response {
-                    success: Success.Success,
-                    error: Error.Error,
-                }
+                alias Response = Success.Success | Error.Error;
             }
 
             @post

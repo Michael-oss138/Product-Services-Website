@@ -1,4 +1,4 @@
-from typing import Literal
+from typing import Literal, cast
 from django.db import models
 from django.utils import timezone
 import uuid
@@ -33,7 +33,7 @@ class Student(models.Model):
     user = models.OneToOneField(
         User, on_delete=models.CASCADE, related_name="student_profile"
     )
-    school_id = models.UUIDField()
+    school_id = models.CharField(max_length=255)
     date_of_birth = models.DateField()
     gender = models.CharField(
         max_length=1,
@@ -68,13 +68,16 @@ class Admin(models.Model):
     user = models.OneToOneField(
         User, on_delete=models.CASCADE, related_name="admin_profile"
     )
-    role = models.CharField(
-        max_length=20,
-        choices=[
-            ("SUPER_ADMIN", "Super Admin"),
-            ("ACADEMIC_ADMIN", "Academic Admin"),
-            ("FINANCIAL_ADMIN", "Financial Admin"),
-        ],
+    role = cast(
+        models.CharField[Literal["SUPER_ADMIN", "ACADEMIC_ADMIN", "FINANCIAL_ADMIN"]],
+        models.CharField(
+            max_length=20,
+            choices=[
+                ("SUPER_ADMIN", "Super Admin"),
+                ("ACADEMIC_ADMIN", "Academic Admin"),
+                ("FINANCIAL_ADMIN", "Financial Admin"),
+            ],
+        ),
     )
     permissions = models.TextField()
     school_id = models.UUIDField(null=True, blank=True)

@@ -1,9 +1,7 @@
-from result import Result, Ok, Err
+from result import Result, Ok
 from django.db import transaction
+from datetime import datetime
 
-from codegen.Api import (
-    UserType,
-)
 from codegen.Api.Users import (
     AdminProfile,
     StudentProfile,
@@ -19,8 +17,9 @@ from codegen.Api.Users.Create.Request import (
     AdminCreate,
     GuardianCreate,
 )
+from codegen.Api.Users.Create.Response.Success import UserCreated
 from api.users.models import (
-    User,
+    User as DbUser,
     Student,
     Teacher,
     Admin,
@@ -33,7 +32,7 @@ def service(
     payload: Request.Body,
 ) -> Result[Response.Success, Response.Error]:
     with transaction.atomic():
-        user = User.objects.create(
+        user = DbUser.objects.create(
             first_name=payload.root.first_name,
             last_name=payload.root.last_name,
             middle_name=payload.root.middle_name,
@@ -50,13 +49,15 @@ def service(
 
                 profile = Student.objects.create(
                     user=user,
-                    date_of_birth=payload.root.profile.date_of_birth,
+                    date_of_birth=datetime.strptime(
+                        payload.root.profile.date_of_birth, "%Y-%m-%d"
+                    ),
                     gender=payload.root.profile.gender,
                     medical_conditions=payload.root.profile.medical_conditions,
                     school_id=payload.root.profile.school_id,
                 )
 
-                api_user = StudentUser(
+                api_user_profile = StudentUser(
                     id=str(user.id),
                     first_name=user.first_name,
                     last_name=user.last_name,
@@ -86,7 +87,7 @@ def service(
                     school_id=payload.root.profile.school_id,
                 )
 
-                api_user = TeacherUser(
+                api_user_profile = TeacherUser(
                     id=str(user.id),
                     first_name=user.first_name,
                     last_name=user.last_name,
@@ -98,6 +99,7 @@ def service(
                     updated_at=user.updated_at.isoformat(),
                     type="TEACHER",
                     profile=TeacherProfile(
+                        id=str(profile.id),
                         school_id=str(profile.school_id),
                     ),
                 )
@@ -114,7 +116,7 @@ def service(
                     school_id=payload.root.profile.school_id,
                 )
 
-                api_user = AdminUser(
+                api_user_profile = AdminUser(
                     id=str(user.id),
                     first_name=user.first_name,
                     last_name=user.last_name,
@@ -126,6 +128,7 @@ def service(
                     updated_at=user.updated_at.isoformat(),
                     type="ADMIN",
                     profile=AdminProfile(
+                        id=str(profile.id),
                         role=profile.role,
                         permissions=profile.permissions,
                         school_id=str(profile.school_id) if profile.school_id else None,
@@ -139,7 +142,7 @@ def service(
 
                 profile = Guardian.objects.create(user=user)
 
-                api_user = GuardianUser(
+                api_user_profile = GuardianUser(
                     id=str(user.id),
                     first_name=user.first_name,
                     last_name=user.last_name,
@@ -152,4 +155,8 @@ def service(
                     type="GUARDIAN",
                 )
 
-        return Ok(Response.Success(code="USER_CREATED", data=api_user))
+        return Ok(
+            Response.Success(
+                root=UserCreated(code="USER_CREATED", data=api_user_profile)
+            )
+        )
