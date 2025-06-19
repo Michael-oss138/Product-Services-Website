@@ -17,7 +17,7 @@ export default async function permission(
     const securityData = await Security.findById(decoded.id);
     if (!securityData) throw new Error("Invaid Auth token");
     const userPermissions: string[] =
-      config.permission[securityData.role as keyof typeof permission];
+      config.permission[securityData.role as keyof typeof config.permission];
     const isPermitted = userPermissions.includes(req.body.role);
     if (!isPermitted) {
       throw new AuthenticationError("Unauthorized request received!");

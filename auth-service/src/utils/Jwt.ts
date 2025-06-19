@@ -6,8 +6,13 @@ interface JwtPayloadType extends JwtPayload {
   role: string;
 }
 class Jwt {
-  createToken(payload: JwtPayloadType): string {
-    return jwt.sign(payload, config.env.jwt_secret!);
+  createAccessToken(payload: JwtPayloadType): string {
+    return jwt.sign(payload, config.env.jwt_secret!, { expiresIn: "1h" });
+  }
+  createRefreshToken(payload: JwtPayloadType) {
+    return jwt.sign({ id: payload.id }, config.env.jwt_secret!, {
+      expiresIn: "30d",
+    });
   }
   verifyToken(token: string): JwtPayloadType {
     return <JwtPayloadType>jwt.verify(token, config.env.jwt_secret!);
