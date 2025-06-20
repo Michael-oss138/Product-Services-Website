@@ -2,6 +2,9 @@ package database
 
 import (
 	"database/sql"
+	"fmt"
+	"os"
+	"path/filepath"
 
 	"educesol.com/payment-service/config"
 	"github.com/golang-migrate/migrate/v4"
@@ -33,14 +36,21 @@ func runMigrations() error {
 	if err != nil {
 		return err
 	}
+	wd, err := os.Getwd()
+	if err != nil {
+		return err
+	}
 	m, err := migrate.NewWithDatabaseInstance(
-		"file:///migrations", "postgres", driver,
+		fmt.Sprintf("file://%v", filepath.ToSlash(filepath.Join(wd, "migrations"))), "postgres", driver,
 	)
 	if err != nil {
 		return err
 	}
+	if err = m.Force(1); err != nil {
+		return err
+	}
 	err = m.Up()
-	if err != nil {
+	if err != nil && err != migrate.ErrNoChange {
 		return err
 	}
 	return nil
