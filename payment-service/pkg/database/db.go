@@ -4,6 +4,9 @@ import (
 	"database/sql"
 
 	"educesol.com/payment-service/config"
+	"github.com/golang-migrate/migrate/v4"
+	"github.com/golang-migrate/migrate/v4/database/postgres"
+	_ "github.com/golang-migrate/migrate/v4/source/file"
 	_ "github.com/lib/pq"
 )
 
@@ -19,30 +22,26 @@ func Initialize() *sql.DB {
 	}
 	Db.SetMaxIdleConns(20)
 	Db.SetMaxIdleConns(10)
-	//createTables()
-	return Db
-}
-func createTables() {
-	AccountTableQuery := `
-	CREATE TABLE IF NOT EXISTS accounts(
-	id INTEGER PRIMARY KEY AUTO_INCREMENT,
-	userId VARCHAR(255) UNIQUE NOT NULL,
-	contractCode VARCHAR(255) NOT NULL,
-    accountReference VARCHAR(255) NOT NULL,
-	accountNumber VARCHAR(255) NOT NULL,
-	accountName TEXT NOT NULL,
-	bankName VARCHAR(255) NOT NULL,
-	bankCode INTEGER NOT NULL,
-	currencyCode VARCHAR(255) NOT NULL,
-	customerName TEXT NOT NULL,
-	customerEmail UNIQUE TEXT NOT NULL,
-	accountBalance DECIMAL(10,4) NOT NULL DEFAULT 0.00,
-	createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-	updatedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
-	)
-	`
-	_, err = Db.Exec(AccountTableQuery)
+	err = runMigrations()
 	if err != nil {
 		panic(err)
 	}
+	return Db
+}
+func runMigrations() error {
+	driver, err := postgres.WithInstance(Db, &postgres.Config{})
+	if err != nil {
+		return err
+	}
+	m, err := migrate.NewWithDatabaseInstance(
+		"file:///migrations", "postgres", driver,
+	)
+	if err != nil {
+		return err
+	}
+	err = m.Up()
+	if err != nil {
+		return err
+	}
+	return nil
 }
