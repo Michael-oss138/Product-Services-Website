@@ -1,0 +1,33 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+env/
+venv/
+pip-log.txt
+pip-delete-this-directory.txt
+.tox/
+.coverage
+.cache
+*.egg-info/
+.pytest_cache/
+.mypy_cache/
+
+# Django
+db.sqlite3 # Your local development database
+/media     # User-uploaded media files (can be large, typically stored separately in production)
+/staticfiles # Collected static files (generated during deployment, not typically committed)
+
+# Environment variables (sensitive information)
+.env
+*.env
+
+# IDE specific files
+.idea/      # PyCharm
+.vscode/    # VS Code
+
+# macOS specific files
+.DS_Store
+.Trashes
